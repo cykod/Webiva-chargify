@@ -1,0 +1,28 @@
+<% action_panel do |p| -%>
+  <%= p.link "Setup Chargify Plans", :action => 'setup', :icon => 'edit.gif' %>
+<% end -%>
+<hr/>
+
+<script>
+<%=  active_table_javascript %>
+
+ChargifyComponent = {
+  selectPlan: function() {
+    SCMS.remoteOverlay("<%= url_for :action => 'select_plan' %>");
+  },
+
+  selectPlanSubmit: function(chargify_plan_id) {
+    this.tableAction('plan', "plan=" + chargify_plan_id);
+  },
+
+  tableAction: function(action,params) {
+    ActiveTable.action(action,null,"chargify_components_table","<%= url_for :action => 'display_chargify_components_table' %>",'chargify_components_table',params);
+  }
+}
+</script>
+
+<div class='admin_content'>
+<div id='chargify_components_table'>
+<%= render :partial => 'chargify_components_table' %>
+</div>
+</div>

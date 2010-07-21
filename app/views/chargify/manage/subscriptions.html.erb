@@ -1,0 +1,14 @@
+<% action_panel do |p| -%>
+  <%= p.link "Chargify Plans", :action => 'plans', :icon => 'edit.gif' %>
+<% end -%>
+<hr/>
+
+<script>
+<%=  active_table_javascript %>
+</script>
+
+<div class='admin_content'>
+<div id='chargify_subscriptions_table'>
+<%= render :partial => 'chargify_subscriptions_table' %>
+</div>
+</div>

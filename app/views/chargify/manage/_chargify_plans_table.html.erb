@@ -1,0 +1,13 @@
+<% current_time = Time.now %>
+<% active_table_for :chargify_plans_table, @active_table_output,
+                    :more_actions => [['Activate', 'active'], ['Deactivate', 'inactive'], ['Hide', 'hidden']],
+                    :style => 'width:100%' do |t| %>
+<tr <%= highlight_row 'chargify_plan',t.id %> >
+  <td align='left' nowrap='1'><%= entry_checkbox "chargify_plan", t.id %></td>
+  <td><%= t.name %></td>
+  <td align="center"><%= t.status_display || '-' %></td>
+  <td><%= t.description %></td>
+</tr>
+
+
+<% end -%>

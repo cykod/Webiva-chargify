@@ -1,0 +1,30 @@
+<div class='cms_form'>
+
+<div align="right">
+<a href="javascript:void(0);" onclick="SCMS.closeOverlay();">[x] close</a>
+</div>
+
+<p>
+<%= 'Subscription'.t %>: <%= @subscription.chargify_plan.name %><br/>
+<%= 'User'.t %>: <%= @subscription.end_user.name %><br/>
+</p>
+
+<h3><%= 'Transactions'.t %></h3>
+
+<table class="active_table">
+<tr><th>Id</th><th>Type</th><th>Memo</th><th>Amount</th><th>Successful</th><th>Occurred</th></tr>
+<tbody id="transactions">
+<% @subscription.chargify_transactions.each do |transaction| -%>
+<tr>
+  <td>#<%= transaction.transaction_id %></td>
+  <td><%= transaction.charge_type.underscore.titleize %></td>
+  <td><%= transaction.memo %></td>
+  <td><%= number_to_currency(transaction.amount) %></td>
+  <td><%= transaction.success ? 'Yes'.t : 'No'.t %></td>
+  <td><%= transaction.created_at.strftime(DEFAULT_DATETIME_FORMAT.t) %></td>
+</tr>
+<% end -%>
+</tbody>
+</table>
+
+</div>

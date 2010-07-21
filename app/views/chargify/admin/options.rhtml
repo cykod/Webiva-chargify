@@ -1,0 +1,19 @@
+<% if @options.valid? %>
+  <% action_panel do |p| -%>
+    <% if ChargifyPlan.count > 0 -%>
+      <%= p.link "Refresh Chargify Plans", :action => 'refresh', :icon => 'edit.gif' %>
+      <%= p.link "Setup Chargify Plans", :action => 'setup', :icon => 'edit.gif' %>
+      <%= p.link "Setup Chargify Components", :action => 'components', :icon => 'edit.gif' %>
+    <% else -%>
+      <%= p.link "Refresh Chargify Plans", :action => 'refresh', :icon => 'edit.gif' %>
+    <% end -%>
+  <% end -%>
+  <hr/>
+<% end -%>
+
+<div class='admin_content'>
+<% admin_form_for :options, @options do |f|  -%>
+  <%= render :partial => @options.options_partial, :locals => @options.options_locals(f) -%>
+  <%= f.submit_tag 'Save' %>
+<% end -%>
+</div>

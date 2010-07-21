@@ -1,0 +1,19 @@
+<% action_panel do |p| -%>
+  <%= p.link "Setup Chargify Components", :action => 'components', :icon => 'edit.gif' %>
+<% end -%>
+<hr/>
+
+<div class='admin_content'>
+<% admin_form_for :plans, @plans do |f| -%>
+
+  <% @plans.each do |plan| -%>
+    <% cms_subfields_for "plans_#{plan.id}", plan do |sf| -%>
+      <%= sf.select :handler, @handler_options, :label => "%s Handler" / plan.name %>
+    <% end -%>
+  <% end -%>
+
+  <%= f.spacer %>
+  <%= f.cancel_submit_buttons %>
+<% end -%>
+
+</div>

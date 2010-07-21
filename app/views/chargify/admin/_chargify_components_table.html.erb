@@ -1,0 +1,11 @@
+<% current_time = Time.now %>
+<% active_table_for :chargify_components_table, @active_table_output,
+                    :actions => [['Set Plan', 'js', 'ChargifyComponent.selectPlan();']],
+                    :style => 'width:100%' do |t| %>
+<tr <%= highlight_row 'chargify_component',t.id %> >
+  <td align='left' nowrap='1'><%= entry_checkbox "chargify_component", t.id %></td>
+  <td><%= t.name %></td>
+  <td><%= t.chargify_plan ? t.chargify_plan.name : 'None' %></td>
+</tr>
+
+<% end -%>

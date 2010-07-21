@@ -1,0 +1,11 @@
+<div class='cms_form'>
+
+<h3>Select a Chargify Plan</h3>
+
+Chargify Plans: <%= select_tag 'chargify_plan', options_for_select([['None', nil]] + ChargifyPlan.find(:all, :conditions => 'handler IS NOT NULL').collect{|p| [p.name, p.id]}) %>
+<br/>
+<div align='right'>
+<input type='submit' value='Submit' onclick='ChargifyComponent.selectPlanSubmit($("chargify_plan").value); RedBox.close(); return false;'/> <input type='submit' value='Cancel' onclick='RedBox.close(); return false;' />
+</div>
+
+</div>
