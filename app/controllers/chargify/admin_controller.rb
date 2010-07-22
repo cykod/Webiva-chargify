@@ -44,6 +44,8 @@ class Chargify::AdminController < ModuleController
 
     @options = self.class.module_options(params[:options])
 
+    @options.postback_hash = DomainModel.generate_hash[0..7] if @options.postback_hash.blank?
+
     if request.post? && @options.valid?
       Configuration.set_config_model(@options)
       flash[:notice] = "Updated Chargify module options".t
@@ -125,13 +127,15 @@ class Chargify::AdminController < ModuleController
   end
 
   class Options < HashModel
-    attributes :api_key => nil, :subdomain => nil
+    attributes :api_key => nil, :subdomain => nil, :postback_hash => nil
     validates_presence_of :api_key
     validates_presence_of :subdomain
+    validates_presence_of :postback_hash
 
     options_form(
                  fld(:api_key, :text_field),
-                 fld(:subdomain, :text_field, :description => 'https://<subdomain>.chargify.com')
+                 fld(:subdomain, :text_field, :description => 'https://<subdomain>.chargify.com'),
+                 fld(:postback_hash, :text_field, :description => 'Auto generated random hash')
                  )
 
     def validate

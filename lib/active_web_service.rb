@@ -231,7 +231,6 @@ class ActiveWebService
     @request_url = url
     @request_options = options
 
-    Rails.logger.error "#{@request_method}: #{@request_url}"
     @response = self.class.send(method, url, options)
   end
 

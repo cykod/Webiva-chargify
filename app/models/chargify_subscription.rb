@@ -331,6 +331,17 @@ class ChargifySubscription < DomainModel
     self.get_credit_card_data('card_type')
   end
 
+  def self.update_subscriptions(opts={})
+    subscription_ids = opts[:subscription_ids]
+    return unless subscription_ids
+
+    subscription_ids.each do |subscription_id|
+      subscription = ChargifySubscription.find_by_subscription_id(subscription_id)
+      next unless subscription
+      subscription.update_subscription_data
+    end
+  end
+
   protected
 
   def get_credit_card_data(field) #:nodoc:

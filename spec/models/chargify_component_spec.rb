@@ -25,6 +25,7 @@ describe ChargifyComponent do
     component.name.should == 'Basic Plan File storage'
     component.display_name.should == 'File storage'
     component.component_name.should == 'basic_plan_file_storage'
+    component.component_name(:base=>true).should == 'file_storage'
   end
 
   it "should be able to create a component from chargify api hash" do
