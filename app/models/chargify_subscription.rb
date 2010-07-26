@@ -237,6 +237,12 @@ class ChargifySubscription < DomainModel
     customer = self.fetch_customer
     return customer if customer
 
+    if self.end_user.first_name.blank? || self.end_user.last_name.blank?
+      self.end_user.first_name = self.billing_first_name
+      self.end_user.last_name = self.billing_last_name
+      self.end_user.save
+    end
+
     begin
       customer = self.chargify_client.service.create_customer :first_name => self.end_user.first_name, :last_name => self.end_user.last_name, :email => self.end_user.email, :reference => self.end_user_id
     rescue ActiveWebService::InvalidResponse
