@@ -1,6 +1,7 @@
 class Chargify::PageFeature < ParagraphFeature
 
   include ActionView::Helpers::NumberHelper
+  include ActionView::Helpers::FormTagHelper
 
   feature :chargify_page_subscribe, :default_feature => <<-FEATURE
   <cms:subscription>
@@ -153,6 +154,26 @@ class Chargify::PageFeature < ParagraphFeature
     context.field_tag("#{base}:expiration_year", :control => 'select', :options => (Time.now.year..(Time.now.year+10)).to_a)
     context.field_tag("#{base}:product_handle", :control => 'select', :options => data[:plans].collect{|p| [p.name, p.product_handle]})
     context.submit_tag("#{base}:submit", :default => 'Submit')
+
+    context.define_tag("#{base}:radio") do |t|
+      plan = data[:plans].find { |p| p.product_handle == t.attr['name'] }
+      if plan
+        radio_button_tag('subscription[product_handle]', plan.product_handle, t.locals.subscription.product_handle == plan.product_handle)
+      else
+        'Invalid plan'
+      end
+    end
+
+    context.loop_tag("#{base}:plan") { |t| data[:plans] }
+    context.field_tag("#{base}:plan:product_handle", :control => :radio_buttons) { |t| [[t.locals.plan.name, t.locals.plan.product_handle]] }
+    self.plan_features(context, data, "#{base}:plan")
+    
+    data[:plans].each do |plan|
+      tag_name = plan.product_handle.downcase.gsub(/[^a-z0-9-]/, '').gsub('-', '_')
+      context.expansion_tag("#{base}:#{tag_name}") { |t| t.locals.plan = plan }
+      context.field_tag("#{base}:#{tag_name}:product_handle", :control => :radio_buttons) { |t| [[t.locals.plan.name, t.locals.plan.product_handle]] }
+      self.plan_features(context, data, "#{base}:#{tag_name}")
+    end
 
     context.loop_tag("#{base}:component") { |t| t.locals.subscription.chargify_components if t.locals.subscription.chargify_plan }
     self.component_form_tags(context, data, "#{base}:component")
