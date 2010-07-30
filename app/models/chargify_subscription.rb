@@ -74,9 +74,14 @@ class ChargifySubscription < DomainModel
 
       self.errors.add(:credit_card, 'is missing') unless @full_number
     elsif @old_plan  # Editing an existing subscription
-      unless self.plan_handler_obj.can_edit?(self.chargify_plan.product_handle, self.handler_components)
+      errors = self.plan_handler_obj.can_edit?(self.chargify_plan.product_handle, self.handler_components)
+      if ! errors
         self.errors.add(:chargify_plan_id, 'is invalid')
         self.errors.add(:product_handle, 'is invalid')
+      elsif errors.is_a?(Array)
+        errors.each do |msg|
+          msg.is_a?(Array) ? self.errors.add(msg[0], msg[1]) : self.errors.add_to_base(msg)
+        end
       end
 
       invalid_component = self.chargify_components.find { |c| ! c.valid? }
