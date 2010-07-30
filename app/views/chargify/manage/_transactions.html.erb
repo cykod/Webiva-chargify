@@ -6,7 +6,7 @@
 
 <p>
 <%= 'Subscription'.t %>: <%= @subscription.chargify_plan.name %><br/>
-<%= 'User'.t %>: <%= @subscription.end_user.name %><br/>
+<%= 'User'.t %>: <%= @subscription.end_user.name if @subscription.end_user %><br/>
 </p>
 
 <h3><%= 'Transactions'.t %></h3>

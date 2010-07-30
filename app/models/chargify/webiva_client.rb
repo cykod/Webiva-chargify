@@ -59,9 +59,11 @@ class Chargify::WebivaClient
       ChargifyPlan.push_product product
     end
 
-    self.service.product_families.each do |family|
-      self.service.components(family['id']).each do |component|
-        ChargifyComponent.push_component family['id'], component
+    if self.service.product_families 
+      self.service.product_families.each do |family|
+        self.service.components(family['id']).each do |component|
+          ChargifyComponent.push_component family['id'], component
+        end
       end
     end
 

@@ -5,7 +5,7 @@
   <td align='left' nowrap='1'><%= entry_checkbox "chargify_subscription", t.id %></td>
   <td><a onclick="SCMS.remoteOverlay('<%= url_for :action => 'transactions', :path => t.id%>')" href="javascript:void(0);">Transactions</a></td>
   <td><%= t.chargify_plan.name %></td>
-  <td><%= t.end_user.name %></td>
+  <td><%= t.end_user.name if t.end_user %></td>
   <td><%= t.created_at.strftime(DEFAULT_DATETIME_FORMAT.t) %></td>
 </tr>
 

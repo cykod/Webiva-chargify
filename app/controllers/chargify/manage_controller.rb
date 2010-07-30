@@ -10,6 +10,7 @@ class Chargify::ManageController < ModuleController
                 ChargifyPlan,
                 [ hdr(:icon, '', :width=>10),
                   hdr(:string, :name),
+                  hdr(:string, :product_handle),
                   hdr(:string, :status),
                   hdr(:string, :description)
                 ]
