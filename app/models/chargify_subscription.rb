@@ -69,7 +69,11 @@ class ChargifySubscription < DomainModel
       if ! self.coupon_code.blank? && self.chargify_plan
         chargify_coupon = self.chargify_client.fetch_coupon(self.chargify_plan.product_family_id, self.coupon_code)
         self.errors.add(:coupon_code, 'is invalid') unless chargify_coupon
-        self.errors.add(:coupon_code, 'has expired') if chargify_coupon && Time.parse(chargify_coupon['end_date']) < Time.now
+        if chargify_coupon
+          end_date = chargify_coupon['end_date']
+          end_date = Time.parse(end_date) unless end_date.is_a?(Time)
+          self.errors.add(:coupon_code, 'has expired') if end_date < Time.now
+        end
       end
 
       self.errors.add(:credit_card, 'is missing') unless @full_number
