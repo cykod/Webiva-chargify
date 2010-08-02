@@ -121,6 +121,12 @@ class ChargifySubscription < DomainModel
       subscription = self.chargify_client.subscribe self.chargify_plan.product_handle, self.end_user_id, self.credit_card_attributes, self.chargify_component_quantities, self.coupon_code
     rescue ActiveWebService::InvalidResponse
       self.errors.add_to_base 'Please check your billing information'.t
+      if self.chargify_client.service.response && self.chargify_client.service.response['errors']
+        self.chargify_client.service.response['errors'].uniq.each do |msg|
+          self.errors.add_to_base(msg)
+          self.end_user.action('/chargify/subscription/subscribe_failure', :identifier => msg)
+        end
+      end
       self.status = 'invalid'
       return false
     end
@@ -172,6 +178,12 @@ class ChargifySubscription < DomainModel
       self.chargify_client.edit_credit_card(self.subscription_id, self.credit_card_attributes) if @full_number
     rescue ActiveWebService::InvalidResponse
       self.errors.add_to_base 'Please check your billing information'.t
+      if self.chargify_client.service.response && self.chargify_client.service.response['errors']
+        self.chargify_client.service.response['errors'].uniq.each do |msg|
+          self.errors.add_to_base(msg)
+          self.end_user.action('/chargify/subscription/credit_card_failure', :target => self, :identifier => msg)
+        end
+      end
       self.status = 'invalid'
       return false
     end
@@ -184,6 +196,12 @@ class ChargifySubscription < DomainModel
     rescue ActiveWebService::InvalidResponse
       self.errors.add(:product_handle, 'is invalid')
       self.errors.add(:components, 'are invalid')
+      if self.chargify_client.service.response && self.chargify_client.service.response['errors']
+        self.chargify_client.service.response['errors'].uniq.each do |msg|
+          self.errors.add_to_base(msg)
+          self.end_user.action('/chargify/subscription/migrate_failure', :target => self, :identifier => msg)
+        end
+      end
       self.status = 'invalid'
       return false
     end

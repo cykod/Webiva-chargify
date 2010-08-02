@@ -22,6 +22,10 @@ class Chargify::PageController < ParagraphController
                  fld(:success_page_id, :page_selector),
                  fld(:edit_page_id, :page_selector)
                  )
+
+    def options_partial
+      "/application/triggered_options_partial"
+    end
   end
 
   class EditOptions < HashModel
@@ -33,6 +37,10 @@ class Chargify::PageController < ParagraphController
                  fld(:view_page_id, :page_selector),
                  fld(:cancel_page_id, :page_selector)
                  )
+
+    def options_partial
+      "/application/triggered_options_partial"
+    end
   end
 
   class ViewOptions < HashModel
@@ -56,5 +64,9 @@ class Chargify::PageController < ParagraphController
                  fld(:edit_page_id, :page_selector),
                  fld(:view_page_id, :page_selector)
                  )
+
+    def options_partial
+      "/application/triggered_options_partial"
+    end
   end
 end

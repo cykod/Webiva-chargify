@@ -44,6 +44,7 @@ class Chargify::PageFeature < ParagraphFeature
       <p><cms:name/></p>
     </cms:plan>
     <cms:form>
+      <cms:errors><div class='errors'><cms:value/></div></cms:errors>
       Plan: <cms:product_handle/><br/>
       First Name: <cms:billing_first_name/><br/>
       Last Name: <cms:billing_last_name/><br/>

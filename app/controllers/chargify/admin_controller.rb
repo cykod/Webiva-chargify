@@ -30,6 +30,12 @@ class Chargify::AdminController < ModuleController
                   hdr(:static, 'Plan')
                 ]
 
+  register_action '/chargify/plan/subscribe', :description => 'Chargify New Subscription'
+  register_action '/chargify/plan/edit', :description => 'Chargify Edit Subscription'
+  register_action '/chargify/plan/cancel', :description => 'Chargify Subscription Canceled'
+  register_action '/chargify/subscription/subscribe_failure', :description => 'Chargify Subscription Failure'
+  register_action '/chargify/subscription/credit_card_failure', :description => 'Chargify Edit Credit Card Failure'
+  register_action '/chargify/subscription/migrate_failure', :description => 'Chargify Change Plan Failure'
 
   public
 
