@@ -38,6 +38,7 @@ class Chargify::PageRenderer < ParagraphRenderer
     if request.post? && params[:subscription]
       @subscription.attributes = params[:subscription].slice(*ChargifySubscription.valid_params)
       if @subscription.subscribe
+        self.elevate_user_level(myself, EndUser::UserLevel::CONVERSION) if myself.id
         paragraph_action(myself.action('/chargify/plan/subscribe', :target => @subscription))
         paragraph.run_triggered_actions(@subscription,'new_subscription',myself)
 
