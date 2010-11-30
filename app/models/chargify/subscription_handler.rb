@@ -48,10 +48,10 @@ class Chargify::SubscriptionHandler < Chargify::PlanHandler
     end
 
     def access_token_options
-      options = AccessToken.select_options_with_nil
+      options = AccessToken.select_options_with_nil nil, :conditions => {:editor => 0}
       if options.length == 1
         AccessToken.create :token_name => 'Paid Member Subscription', :editor => 0, :description => ''
-        options = AccessToken.select_options_with_nil
+        options = AccessToken.select_options_with_nil nil, :conditions => {:editor => 0}
       end
       options
     end

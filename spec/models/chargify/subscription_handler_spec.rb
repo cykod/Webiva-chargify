@@ -54,6 +54,31 @@ describe Chargify::SubscriptionHandler do
       eut.should_not be_nil
     end
 
+    it "should be able to subscribe to a valid plan and reset token values" do
+      @user.add_token! @token, :valid_until => 1.day.since, :valid_at => 1.day.ago
+
+      # Force subscription to push customer
+      fakeweb_chargify_customer_lookup @user.id
+
+      fakeweb_chargify_create_customer :customer => {"address"=>"56 Rolland St", "city"=>"Charlestown", "reference"=>"#{@user.id}", "created_at"=>"2010-07-09T17:15:13-04:00", "zip"=>"02112", "country"=>"US", "updated_at"=>"2010-07-13T11:15:46-04:00", "id"=>87412, "last_name"=>@user.last_name, "address_2"=>"", "phone"=>"555-555-5555", "organization"=>"", "email"=>@user.email, "state"=>"MA", "first_name"=>@user.first_name}
+
+      fakeweb_chargify_create_subscription :subscription => subscription_response(@basic_plan, @user)
+
+      fakeweb_chargify_transactions 82, @transactions
+
+      subscription = ChargifySubscription.new :product_handle => 'basic-plan', :credit_card => '1', :expiration_month => '1', :expiration_year => (Time.now.year+1), :billing_first_name => 'Tester', :billing_last_name => 'Last', :billing_address => '56 Rolland St', :billing_city => 'Charlestown', :billing_state => 'MA', :billing_zip => '02112'
+      subscription.end_user_id = @user.id
+      assert_difference 'EndUserToken.count', 0 do
+        subscription.subscribe.should be_true
+      end
+      subscription.id.should_not be_nil
+      subscription.product_family_id.should == @basic_plan.product_family_id
+
+      eut = EndUserToken.find_by_end_user_id_and_access_token_id @user.id, @token.id
+      eut.should_not be_nil
+      eut.valid_until.should be_nil
+      eut.valid_at.should be_nil
+    end
   end
 
   describe "Canceling" do
