@@ -123,7 +123,7 @@ class ChargifySubscription < DomainModel
     subscription = nil
     begin
       subscription = self.chargify_client.subscribe self.chargify_plan.product_handle, self.end_user_id, self.credit_card_attributes, self.chargify_component_quantities, self.coupon_code
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
       self.errors.add_to_base 'Please check your billing information'.t
       if self.chargify_client.service.response && self.chargify_client.service.response['errors']
         self.chargify_client.service.response['errors'].uniq.each do |msg|
@@ -157,7 +157,7 @@ class ChargifySubscription < DomainModel
     subscription = nil
     begin
       subscription = self.chargify_client.cancel self.subscription_id
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
       self.errors.add_to_base 'Canceling subscription failed'.t
       return false
     end
@@ -180,7 +180,7 @@ class ChargifySubscription < DomainModel
 
     begin
       self.chargify_client.edit_credit_card(self.subscription_id, self.credit_card_attributes) if @full_number
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
       self.errors.add_to_base 'Please check your billing information'.t
       if self.chargify_client.service.response && self.chargify_client.service.response['errors']
         self.chargify_client.service.response['errors'].uniq.each do |msg|
@@ -197,7 +197,7 @@ class ChargifySubscription < DomainModel
       # should break this into edit_credit_card, edit_components, migrate_plan
       old_product_handle = @old_plan ? @old_plan.product_handle : nil
       subscription = self.chargify_client.migrate self.subscription_id, self.product_handle, old_product_handle, self.chargify_component_quantities
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
       self.errors.add(:product_handle, 'is invalid')
       self.errors.add(:components, 'are invalid')
       if self.chargify_client.service.response && self.chargify_client.service.response['errors']
@@ -230,7 +230,7 @@ class ChargifySubscription < DomainModel
     data = nil
     begin
       data = self.chargify_client.service.subscription self.subscription_id
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
       Rails.logger.error "Failed to update subscription #{self.subscription_id}"
       return
     end
@@ -246,7 +246,7 @@ class ChargifySubscription < DomainModel
       self.chargify_client.service.subscription_transactions(self.subscription_id).each do |transaction|
         self.push_transaction transaction
       end
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
     end
   end
 
@@ -272,7 +272,7 @@ class ChargifySubscription < DomainModel
 
     begin
       customer = self.chargify_client.service.create_customer :first_name => self.end_user.first_name, :last_name => self.end_user.last_name, :email => self.end_user.email, :reference => self.end_user_id
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
       nil
     end
   end
@@ -280,7 +280,7 @@ class ChargifySubscription < DomainModel
   def fetch_customer
     begin
       self.chargify_client.service.find_customer_by_reference self.end_user_id
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
       false
     end
   end

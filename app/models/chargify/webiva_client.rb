@@ -9,7 +9,7 @@ class Chargify::WebivaClient
     begin
       self.service.products
       true
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
       false
     end
   end
@@ -79,7 +79,7 @@ class Chargify::WebivaClient
   def fetch_coupon(product_family_id, coupon_code)
     begin
       self.service.find_coupon_by_code(product_family_id, coupon_code)
-    rescue ActiveWebService::InvalidResponse
+    rescue RESTHome::InvalidResponse
       false
     end
   end

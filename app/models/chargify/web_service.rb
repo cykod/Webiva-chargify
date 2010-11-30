@@ -1,5 +1,6 @@
+require 'resthome'
 
-class Chargify::WebService < ActiveWebService
+class Chargify::WebService < RESTHome
 
   headers 'Content-Type' => 'application/json'
 
