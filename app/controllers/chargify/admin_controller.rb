@@ -52,9 +52,11 @@ class Chargify::AdminController < ModuleController
     @options = self.class.module_options(params[:options])
 
     @options.postback_hash = DomainModel.generate_hash[0..7] if @options.postback_hash.blank?
+    @handler_options = Chargify::SubscriptionHandler.handler_options params[:handler_options]
 
-    if request.post? && @options.valid?
+    if request.post? && @handler_options.valid? && @options.valid?
       Configuration.set_config_model(@options)
+      Configuration.set_config_model(@handler_options)
       flash[:notice] = "Updated Chargify module options".t
       if ChargifyPlan.count > 0
         redirect_to :action => 'setup'

@@ -23,10 +23,7 @@ class Chargify::SubscriptionHandler < Chargify::PlanHandler
   end
 
   def token
-    return @token if @token
-    options = Chargify::SubscriptionHandler.handler_options
-    return nil unless options.valid?
-    @token = AccessToken.find_by_id options.access_token_id
+    Chargify::SubscriptionHandler.handler_options.access_token
   end
 
   def self.handler_options(vals=nil)
@@ -39,8 +36,16 @@ class Chargify::SubscriptionHandler < Chargify::PlanHandler
     validates_presence_of :access_token_id
 
     options_form(
-                 fld(:access_token_id, :select, :options => :access_token_options)
+                 fld(:access_token_id, :select, :options => :access_token_options, :description => "Token to added to the user when they subscribe. Use this token when\nsetting up the lock(s) for the paid member section of your site.")
                  )
+
+    def validate
+      self.errors.add(:access_token_id, 'is invalid') if self.access_token_id && self.access_token.nil?
+    end
+
+    def access_token
+      @access_token ||= AccessToken.find_by_id self.access_token_id
+    end
 
     def access_token_options
       options = AccessToken.select_options_with_nil

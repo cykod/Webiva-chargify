@@ -2,7 +2,6 @@
   <% action_panel do |p| -%>
     <% if ChargifyPlan.count > 0 -%>
       <%= p.link "Refresh Chargify Plans", :action => 'refresh', :icon => 'edit.gif' %>
-      <%= p.link "Setup Chargify Subscription", :action => 'subscription', :icon => 'edit.gif' %>
       <%= p.link "Setup Chargify Plans", :action => 'setup', :icon => 'edit.gif' %>
       <%= p.link "Setup Chargify Components", :action => 'components', :icon => 'edit.gif' %>
     <% else -%>
@@ -14,7 +13,13 @@
 
 <div class='admin_content'>
 <% admin_form_for :options, @options do |f|  -%>
+  <%= f.header 'Chargify Settings' %>
   <%= render :partial => @options.options_partial, :locals => @options.options_locals(f) -%>
+  <% cms_subfields_for :handler_options, @handler_options do |sf| -%>
+    <%= sf.header 'Subscription Handler Settings' %>
+    <%= render :partial => @handler_options.options_partial, :locals => @handler_options.options_locals(sf) -%>
+  <% end -%>
+  <%= f.spacer %>
   <%= f.submit_tag 'Save' %>
 <% end -%>
 
