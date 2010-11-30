@@ -132,6 +132,7 @@ class ChargifySubscription < DomainModel
         end
       end
       self.status = 'invalid'
+      Rails.logger.error self.chargify_client.service.inspect
       return false
     end
 

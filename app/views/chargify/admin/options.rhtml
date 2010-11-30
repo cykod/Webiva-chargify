@@ -2,6 +2,7 @@
   <% action_panel do |p| -%>
     <% if ChargifyPlan.count > 0 -%>
       <%= p.link "Refresh Chargify Plans", :action => 'refresh', :icon => 'edit.gif' %>
+      <%= p.link "Setup Chargify Subscription", :action => 'subscription', :icon => 'edit.gif' %>
       <%= p.link "Setup Chargify Plans", :action => 'setup', :icon => 'edit.gif' %>
       <%= p.link "Setup Chargify Components", :action => 'components', :icon => 'edit.gif' %>
     <% else -%>

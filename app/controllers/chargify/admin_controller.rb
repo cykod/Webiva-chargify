@@ -19,7 +19,8 @@ class Chargify::AdminController < ModuleController
 
   content_model :chargify
 
-  register_handler :chargify, :plan, 'Chargify::TestHandler'
+  register_handler :chargify, :plan, 'Chargify::TestHandler' if Rails.env == 'test'
+  register_handler :chargify, :plan, 'Chargify::SubscriptionHandler'
 
   # need to include 
   include ActiveTable::Controller
@@ -130,6 +131,18 @@ class Chargify::AdminController < ModuleController
 
   def select_plan
     render :partial => 'select_plan'
+  end
+
+  def subscription
+    cms_page_path ['Options','Modules',"Chargify Options"], "Chargify Subscription Options"
+
+    @options = Chargify::SubscriptionHandler.handler_options params[:options]
+
+    if request.post? && @options.valid?
+      Configuration.set_config_model(@options)
+      flash[:notice] = "Updated Chargify Subscription options".t
+      redirect_to :action => 'options'
+    end
   end
 
   class Options < HashModel
