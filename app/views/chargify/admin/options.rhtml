@@ -19,6 +19,10 @@
     <%= sf.header 'Subscription Handler Settings' %>
     <%= render :partial => @handler_options.options_partial, :locals => @handler_options.options_locals(sf) -%>
   <% end -%>
+  <% cms_subfields_for :pro_handler_options, @pro_handler_options do |sf| -%>
+    <%= sf.header 'Pro Subscription Handler Settings' %>
+    <%= render :partial => @pro_handler_options.options_partial, :locals => @pro_handler_options.options_locals(sf) -%>
+  <% end -%>
   <%= f.spacer %>
   <%= f.submit_tag 'Save' %>
 <% end -%>
