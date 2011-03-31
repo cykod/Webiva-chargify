@@ -21,6 +21,7 @@ class Chargify::AdminController < ModuleController
 
   register_handler :chargify, :plan, 'Chargify::TestHandler' if Rails.env == 'test'
   register_handler :chargify, :plan, 'Chargify::SubscriptionHandler'
+  register_handler :chargify, :plan, 'Chargify::ProSubscriptionHandler'
 
   # need to include 
   include ActiveTable::Controller
