@@ -22,6 +22,14 @@ class Chargify::ProSubscriptionHandler < Chargify::PlanHandler
     false
   end
 
+  def edit_cancel(product_identifier)
+    self.cancel
+  end
+
+  def edit(product_identifier,components = {})
+    self.subscript(product_identifier,components)
+  end
+
   def token
     Chargify::SubscriptionHandler.handler_options.pro_access_token
   end

@@ -18,6 +18,14 @@ class Chargify::SubscriptionHandler < Chargify::PlanHandler
     end_user_token.destroy if end_user_token
   end
 
+  def edit_cancel(product_identifier)
+    self.cancel
+  end
+
+  def edit(product_identifier,components = {})
+    self.subscript(product_identifier,components)
+  end
+
   def can_edit?(product_identifier, components={})
     false
   end

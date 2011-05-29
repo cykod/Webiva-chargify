@@ -211,6 +211,8 @@ class ChargifySubscription < DomainModel
       return false
     end
 
+    @old_plan.edit_cancel(self.data['product']['handle']) if @old_plan && @old_plan.respond_to?(:edit_cancel)
+
     @old_plan = nil
     self.subscription_id = subscription['id']
     self.attributes = subscription.slice('state', 'created_at', 'updated_at', 'expires_at', 'activated_at')
